@@ -31,7 +31,7 @@ export default function Sidebar() {
             group: "General",
             items: [
                 {
-                    link: "/dashboard",
+                    link: "/overview",
                     text: "Overview",
                     icon: <LayoutGrid />
                 },

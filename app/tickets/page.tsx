@@ -1,4 +1,4 @@
 'use client'
 export default function Page() {
-    return <h1>Hello, Dashboard Page!</h1>
+    return <h1>Hello, Tickets Page!</h1>
 }
