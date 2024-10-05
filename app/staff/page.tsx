@@ -1,13 +1,15 @@
-"use client"; // Add this if you are using hooks
+"use client"; 
 
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { Employee, columns } from "./columns";
 import { DataTable } from "./data-table";
 
-export default function Page() {
-    const [data, setData] = useState<Employee[]>([]); 
 
-   
+export default function Page() {
+    const [data, setData] = useState<Employee[]>([]);
+
+    
+
     const fetchData = async (): Promise<Employee[]> => {
         const response = await fetch('http://localhost:8080/api/employees', {
             method: 'GET',
@@ -25,14 +27,14 @@ export default function Page() {
         return data;
     };
 
-    // Refetch data function
+
     const refetchData = async () => {
         const newData = await fetchData();
-        setData(newData); 
+        setData(newData);
     };
 
     useEffect(() => {
-        refetchData(); 
+        refetchData();
     }, []);
 
     return (

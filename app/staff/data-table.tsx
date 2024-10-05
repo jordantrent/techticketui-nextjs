@@ -21,6 +21,7 @@ import { AddEmployee } from "./addEmployee";
 import { useState } from "react"; 
 import { Dialog } from "@/components/ui/dialog"; 
 import { Employee } from "./columns";
+import { DeleteEmployee } from "./deleteEmployee";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -113,6 +114,7 @@ export function DataTable<TData, TValue>({
            
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <AddEmployee refetchData={refetchData} setOpen={setIsOpen} />
+                
             </Dialog>
         </div>
     );

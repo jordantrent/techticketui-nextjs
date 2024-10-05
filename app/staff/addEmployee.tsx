@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import React from "react";
 
+
 interface AddEmployeeProps {
     refetchData: () => Promise<void>;
     setOpen: (open: boolean) => void;
@@ -31,6 +32,7 @@ const formFields = [
 
 export function AddEmployee({ refetchData, setOpen }: AddEmployeeProps) {
     const [formData, setFormData] = useState({
+        id: "",
         firstName: "",
         lastName: "",
         position: "",

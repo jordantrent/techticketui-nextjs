@@ -21,26 +21,7 @@ export type Employee = {
     email: string
 }
 
-const deleteEmployee = async (
-    employeeId: number,
-    setData: React.Dispatch<React.SetStateAction<Employee[]>>,
-    data: Employee[]
-) => {
-    try {
-        const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error('Failed to delete the employee');
-        }
 
-        setData(data.filter(employee => employee.id !== employeeId));
-
-        console.log(`Employee with ID ${employeeId} deleted successfully`);
-    } catch (error) {
-        console.error('Error deleting employee:', error);
-    }
-};
 
 export const columns = (
     data: Employee[],
@@ -89,7 +70,6 @@ export const columns = (
                         <DropdownMenuItem>View Tickets</DropdownMenuItem>
                         <DropdownMenuItem>Assign Tickets</DropdownMenuItem>
                         <DropdownMenuItem>Edit User</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600" onSelect={() => deleteEmployee(employee.id, setData, data)}>Delete User</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
