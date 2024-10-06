@@ -17,6 +17,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import ViewTicket from "./add-ticket"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -38,7 +39,7 @@ export function DataTable<TData, TValue>({
         <div>
         <div className="flex justify-between items-center py-4">
                 <h1 className="text-lg font-semibold">Tickets</h1>
-                <Button variant="outline">Add Ticket</Button> 
+                <ViewTicket/>
             </div>
         <div className="rounded-md border">
             <Table>

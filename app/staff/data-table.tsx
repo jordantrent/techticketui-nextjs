@@ -17,11 +17,11 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { AddEmployee } from "./addEmployee";
+import { AddEmployee } from "./add-employee";
 import { useState } from "react"; 
 import { Dialog } from "@/components/ui/dialog"; 
 import { Employee } from "./columns";
-import { DeleteEmployee } from "./deleteEmployee";
+import { DeleteEmployee } from "./delete-employee";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
