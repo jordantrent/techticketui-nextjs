@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Expand, Maximize2Icon, Maximize2 } from "lucide-react";
 
-export default function ViewTicket() {
+export default function ViewTicket({ rowSelect }) {
     return (
         <Dialog>
             <DialogTrigger asChild>

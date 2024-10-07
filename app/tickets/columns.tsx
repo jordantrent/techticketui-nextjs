@@ -53,11 +53,10 @@ export const columns: ColumnDef<Ticket>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const ticket = row.original
-            
+         
             return (
                 <div className="flex justify-end">
-                    <ViewTicket />
+                    <ViewTicket rowSelect={row.original.id} />
                 </div>
             )
         },
