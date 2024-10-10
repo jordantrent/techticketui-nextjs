@@ -11,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Expand, Maximize2Icon, Maximize2 } from "lucide-react";
+import { CustomerDetails } from "./components/customer-details-card";
+import { TicketImages } from "./components/image-carousel";
 
 export default function ViewTicket({ rowSelect }) {
     return (
@@ -18,33 +20,22 @@ export default function ViewTicket({ rowSelect }) {
             <DialogTrigger asChild>
                 <Button variant="outline" size="icon"><Maximize2 className="h-4 w-4"/></Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="max-w-[800px]">
                 <DialogHeader>
-                    <DialogTitle>Edit profile</DialogTitle>
-                    <DialogDescription>
-                        Make changes to your profile here. Click save when you're done.
-                    </DialogDescription>
+                    <DialogTitle>Ticket #1000</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                        <Input
-                            id="name"
-                            defaultValue="Pedro Duarte"
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                            Username
-                        </Label>
-                        <Input
-                            id="username"
-                            defaultValue="@peduarte"
-                            className="col-span-3"
-                        />
+                <div className="flex py-4">
+                    <div className="grid grid-cols-4 flex-row gap-4">
+                        <div className= " grid grid-rows-2 gap-4 col-span-2">
+                            <CustomerDetails className=""/>
+                            <CustomerDetails className=""/>
+                        </div>
+                        <div className="col-span-2">
+                            <TicketImages />
+                        </div>
+                        <CustomerDetails className="col-span-4" />
+                        
+               
                     </div>
                 </div>
                 <DialogFooter>
