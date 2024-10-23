@@ -60,7 +60,7 @@ export const columns = (
 
             return (
                 <div className="flex justify-end">
-                    <ViewEmployee />
+                    <ViewEmployee employeeId={employee.id} />
                 </div>
             )
         },
