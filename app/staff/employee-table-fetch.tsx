@@ -3,8 +3,8 @@ import { Ticket } from "../tickets/columns";
 import EmployeeTable from './employee-table';
 
 
-async function fetchData(): Promise<Ticket[]> {
-    const response = await fetch("http://localhost:8080/api/tickets", {
+async function fetchData(employeeId): Promise<Ticket[]> {
+    const response = await fetch(`http://localhost:8080/api/tickets/employee/${employeeId}`, {
         method: "GET",
         headers: {
             "Cache-Control": "no-cache"
@@ -17,10 +17,11 @@ async function fetchData(): Promise<Ticket[]> {
     }
 
     const data: Ticket[] = await response.json();
+    console.log("employeeId:" + employeeId);
     return data;
 }
 
-export default function TicketsPage() {
+export default function TicketsPage({ employeeId }) {
     const [data, setData] = useState<Ticket[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ export default function TicketsPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const fetchedData = await fetchData();
+                const fetchedData = await fetchData(employeeId);
                 setData(fetchedData);
             } catch (err) {
                 setError(err.message);

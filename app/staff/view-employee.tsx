@@ -77,7 +77,7 @@ export default function ViewEmployee({ employeeId }) {
                         <Input className="col-span-2 w-full" value={employeeData.email} readOnly />
                         </Card>
                         <img src="https://placehold.co/400" />
-                        <span className="col-span-3 w-full"><TicketsPage /></span>
+                        <span className="col-span-3 w-full"><TicketsPage employeeId={employeeId} /></span>
                     </div>
                 )}
                 <DialogFooter>
