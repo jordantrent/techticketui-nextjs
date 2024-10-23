@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -34,8 +35,6 @@ export default function ViewTicket({ rowSelect }) {
                             <TicketImages />
                         </div>
                         <CustomerDetails className="col-span-4" />
-                        
-               
                     </div>
                 </div>
                 <DialogFooter>
