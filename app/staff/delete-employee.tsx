@@ -1,4 +1,3 @@
-import { Employee } from "./columns";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,33 +10,41 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { useState } from 'react';
 
-const deleteEmployee = async (
-    employeeId: number,
-    setData: React.Dispatch<React.SetStateAction<Employee[]>>,
-    data: Employee[]
-) => {
-    try {
-        const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error('Failed to delete the employee');
-        }
-
-        setData(data.filter(employee => employee.id !== employeeId));
-
-        console.log(`Employee with ID ${employeeId} deleted successfully`);
-    } catch (error) {
-        console.error('Error deleting employee:', error);
-    }
+type DeleteEmployeeProps = {
+    employeeId: number;
+    isDialogOpen: boolean;
+    setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onDeleteSuccess: () => void;
 };
 
-export function DeleteEmployee() {
+export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDeleteSuccess }: DeleteEmployeeProps) {
+
+    const deleteEmployee = async (
+        event: React.MouseEvent<HTMLButtonElement>,
+        employeeId: number,
+    ) => {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete the employee');
+            }
+            console.log(`Employee with ID ${employeeId} deleted successfully`);
+            onDeleteSuccess();  // Close the dialog after successful deletion
+        } catch (error) {
+            console.error('Error deleting employee:', error);
+        }
+    };
+
     return (
-        <AlertDialog>
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="outline">Show Dialog</Button>
+                <Button onClick={() => setIsDialogOpen(true)} variant="destructive">Delete Employee</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -48,10 +55,14 @@ export function DeleteEmployee() {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={(event) => deleteEmployee(event, employeeId)} 
+                    >
+                        Continue
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
