@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { DeleteEmployee } from './delete-employee';
 
 type ViewEmployeeProps = {
     employeeId: number; 
@@ -26,6 +27,12 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleDialogClose = () => {
+        console.log("Dialog will be closed");
+        setIsDialogOpen(false);
+    }
 
     function onEditClick() {
         setEditing(true);
@@ -167,10 +174,18 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                         <span className="col-span-3 w-full"><TicketsPage employeeId={employeeId} /></span>
                     </div>
                 )}
-                <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                <DialogFooter className="flex flex-col-2 gap-4">
+                    <Button className="col-span-1" type="submit">Save changes</Button>
+                    <DeleteEmployee
+                        employeeId={employeeId}
+                        isDialogOpen={isDialogOpen}
+                        setIsDialogOpen={setIsDialogOpen}
+                        onDeleteSuccess={handleDialogClose} 
+                    />
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
+
+
