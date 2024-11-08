@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Ticket } from "../tickets/columns";
 import EmployeeTable from './employee-table';
 
+type ViewEmployeeProps = {
+    employeeId: number;
+};
 
 async function fetchData(employeeId): Promise<Ticket[]> {
     const response = await fetch(`http://localhost:8080/api/tickets/employee/${employeeId}`, {
@@ -46,7 +49,7 @@ export default function TicketsPage({ employeeId }) {
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Tickets</h1>
+            <h1 className="text-lg font-bold">Assigned Tickets</h1>
             <EmployeeTable data={data} />
         </div>
     );
