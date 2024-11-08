@@ -6,17 +6,30 @@ import { Label } from "@/components/ui/label";
 import { Maximize2 } from "lucide-react";
 import { Employee } from "./columns";
 import { Card } from '@/components/ui/card';
-import { DataTable } from '../tickets/data-table';
-import Page from '../tickets/page';
-import EmployeeTable from './employee-table';
 import TicketsPage from './employee-table-fetch';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
+type ViewEmployeeProps = {
+    employeeId: number; 
+};
 
+type ErrorState = string | null;
 
-export default function ViewEmployee({ employeeId }) {
+export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
     const [employeeData, setEmployeeData] = useState<Employee | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [editing, setEditing] = useState<boolean>(false);
+
+    function onEditClick() {
+        setEditing(true);
+    }
 
     useEffect(() => {
         if (employeeId) {
@@ -40,7 +53,12 @@ export default function ViewEmployee({ employeeId }) {
                     const data: Employee = await response.json();
                     setEmployeeData(data);
                 } catch (err) {
-                    setError(err.message);
+                   
+                    if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError('Unknown error occurred');
+                    }
                 } finally {
                     setLoading(false);
                 }
@@ -49,6 +67,36 @@ export default function ViewEmployee({ employeeId }) {
             fetchData();
         }
     }, [employeeId]);
+
+    const handleInputChange = (field: keyof Employee, value: string) => {
+        setEmployeeData((prev) => prev ? { ...prev, [field]: value } : null);
+    };
+
+    const handleSave = async () => {
+        if (!employeeData) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(employeeData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save changes');
+            }
+
+            setEditing(false); 
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Unknown error occurred');
+            }
+        }
+    };
 
 
     return (
@@ -64,19 +112,58 @@ export default function ViewEmployee({ employeeId }) {
                 {error && <p className="text-red-600">{error}</p>}
                 {employeeData && (
                     <div className="grid gap-4 grid-cols-2 items-start">
-                        <Card className="grid grid-cols-3 items-center p-4">
-                        <Label className="col-span-1 text-left">First Name</Label>
-                        <Input className="col-span-2 w-full" value={employeeData.firstName} readOnly />
-                        <Label className="col-span-1 text-left">Last Name</Label>
-                        <Input className="col-span-2 w-full" value={employeeData.lastName} readOnly />
-                        <Label className="col-span-1 text-left">Position</Label>
-                        <Input className="col-span-2 w-full" value={employeeData.position} readOnly />
-                        <Label className="col-span-1 text-left">Phone</Label>
-                        <Input className="col-span-2 w-full" value={employeeData.phone} readOnly />
-                        <Label className="col-span-1 text-left">Email</Label>
-                        <Input className="col-span-2 w-full" value={employeeData.email} readOnly />
-                        </Card>
-                        <img src="https://placehold.co/400" />
+                        <div className="flex flex-col items-end gap-4">
+                            <Card className="grid grid-cols-3 items-center p-4">
+                                <Label className="col-span-1 text-left">First Name</Label>
+                                <Input
+                                    disabled={!editing}
+                                    className="col-span-2 w-full"
+                                    value={employeeData.firstName}
+                                    onChange={(e) => handleInputChange("firstName", e.target.value)}
+                                />
+                                <Label className="col-span-1 text-left">Last Name</Label>
+                                <Input
+                                    disabled={!editing}
+                                    className="col-span-2 w-full"
+                                    value={employeeData.lastName}
+                                    onChange={(e) => handleInputChange("lastName", e.target.value)} 
+                                />
+                                <Label className="col-span-1 text-left">Position</Label>
+                                <span className="col-span-2 w-full">
+                                    <Select disabled={!editing} onValueChange={(value) => handleInputChange("position", value)}>
+                                        <SelectTrigger className="col-span-3 w-full">
+                                            <SelectValue placeholder={employeeData.position} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Technician">Technician</SelectItem>
+                                            <SelectItem value="Surveyor">Surveyor</SelectItem>
+                                            <SelectItem value="Apprentice">Apprentice</SelectItem>
+                                            <SelectItem value="Project Manager">Project Manager</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    </span>
+                                <Label className="col-span-1 text-left">Phone</Label>
+                                <Input
+                                    disabled={!editing}
+                                    className="col-span-2 w-full"
+                                    value={employeeData.phone}
+                                    onChange={(e) => handleInputChange("phone", e.target.value)} 
+                                />
+                                <Label className="col-span-1 text-left">Email</Label>
+                                <Input
+                                    disabled={!editing}
+                                    className="col-span-2 w-full"
+                                    value={employeeData.email}
+                                    onChange={(e) => handleInputChange("email", e.target.value)} 
+                                />
+                            </Card>
+                            {editing ? (
+                                <Button variant="outline" size="sm" className="ml-auto" type="submit" onClick={handleSave}>Save changes</Button>
+                            ) : (
+                                <Button variant="outline" className="ml-auto" size="sm" onClick={onEditClick}>Edit</Button>
+                            )}   
+                        </div>
+                        <img src="https://i.ibb.co/7tJ5hgZ/80ce3e50-e657-4be4-a300-46768b8eaa92.webp" />
                         <span className="col-span-3 w-full"><TicketsPage employeeId={employeeId} /></span>
                     </div>
                 )}
