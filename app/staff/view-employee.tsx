@@ -17,12 +17,12 @@ import {
 import { DeleteEmployee } from './delete-employee';
 
 type ViewEmployeeProps = {
-    employeeId: number; 
+    employeeId: number;
 };
 
 type ErrorState = string | null;
 
-export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
+export default function ViewEmployee({ employeeId }: ViewEmployeeProps) {
     const [employeeData, setEmployeeData] = useState<Employee | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -45,7 +45,7 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                 setError(null);
 
                 try {
-                    const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
+                    const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                     const data: Employee = await response.json();
                     setEmployeeData(data);
                 } catch (err) {
-                   
+
                     if (err instanceof Error) {
                         setError(err.message);
                     } else {
@@ -83,7 +83,7 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
         if (!employeeData) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
+            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                 throw new Error('Failed to save changes');
             }
 
-            setEditing(false); 
+            setEditing(false);
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
@@ -133,7 +133,7 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                                     disabled={!editing}
                                     className="col-span-2 w-full"
                                     value={employeeData.lastName}
-                                    onChange={(e) => handleInputChange("lastName", e.target.value)} 
+                                    onChange={(e) => handleInputChange("lastName", e.target.value)}
                                 />
                                 <Label className="col-span-1 text-left">Position</Label>
                                 <span className="col-span-2 w-full">
@@ -148,44 +148,160 @@ export default function ViewEmployee({ employeeId } : ViewEmployeeProps) {
                                             <SelectItem value="Project Manager">Project Manager</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    </span>
+                                </span>
                                 <Label className="col-span-1 text-left">Phone</Label>
                                 <Input
                                     disabled={!editing}
                                     className="col-span-2 w-full"
                                     value={employeeData.phone}
-                                    onChange={(e) => handleInputChange("phone", e.target.value)} 
+                                    onChange={(e) => handleInputChange("phone", e.target.value)}
                                 />
                                 <Label className="col-span-1 text-left">Email</Label>
                                 <Input
                                     disabled={!editing}
                                     className="col-span-2 w-full"
                                     value={employeeData.email}
-                                    onChange={(e) => handleInputChange("email", e.target.value)} 
+                                    onChange={(e) => handleInputChange("email", e.target.value)}
                                 />
                             </Card>
                             {editing ? (
                                 <Button variant="outline" size="sm" className="ml-auto" type="submit" onClick={handleSave}>Save changes</Button>
                             ) : (
                                 <Button variant="outline" className="ml-auto" size="sm" onClick={onEditClick}>Edit</Button>
-                            )}   
+                            )}
                         </div>
-                        <img src="https://i.ibb.co/7tJ5hgZ/80ce3e50-e657-4be4-a300-46768b8eaa92.webp" />
+                        {editing ? <ImageUpload employeeId={employeeId} /> : <img src="https://i.ibb.co/7tJ5hgZ/80ce3e50-e657-4be4-a300-46768b8eaa92.webp" />
+                        }
                         <span className="col-span-3 w-full"><TicketsPage employeeId={employeeId} /></span>
                     </div>
                 )}
                 <DialogFooter className="flex flex-col-2 gap-4">
-                    <Button className="col-span-1" type="submit">Save changes</Button>
                     <DeleteEmployee
                         employeeId={employeeId}
                         isDialogOpen={isDialogOpen}
                         setIsDialogOpen={setIsDialogOpen}
-                        onDeleteSuccess={handleDialogClose} 
+                        onDeleteSuccess={handleDialogClose}
                     />
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
+
+type UploadResponse = {
+    uploadURL: string;
+    objectKey: string;
+};
+
+type ImageUploadProps = {
+    employeeId: number;
+};
+
+const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<boolean>(false);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files ? event.target.files[0] : null;
+        setFile(selectedFile);
+        setSuccess(false);
+        setError(null);
+    };
+
+   
+    const handleUpload = async () => {
+        if (!file) {
+            setError('Please select a file to upload.');
+            return;
+        }
+
+        try {
+            setUploading(true);
+            console.log('Starting the upload process');
+
+            const apiUrl = 'https://majhdtduxl.execute-api.eu-west-2.amazonaws.com/getUploadUrl';
+            console.log(`Requesting pre-signed URL from: ${apiUrl}?filename=${file.name}`);
+
+            
+            const response = await fetch(`${apiUrl}?filename=${file.name}&contentType=${file.type}`, { method: 'GET' });
+
+            if (!response.ok) {
+                console.error('Failed to get pre-signed URL:', response.statusText);
+                throw new Error('Failed to get upload URL');
+            }
+
+            const data: UploadResponse = await response.json();
+            console.log('Received pre-signed URL:', data);
+            const { uploadURL, objectKey } = data;
+
+           
+            console.log(`Uploading file to S3 with object key: ${objectKey}`);
+
+            
+            const fileType = file.type || 'application/octet-stream';
+            console.log('Selected file type:', fileType);
+           
+            const uploadResponse = await fetch(uploadURL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': fileType,  
+                },
+                body: file,
+            });
+
+            if (uploadResponse.ok) {
+                setSuccess(true);
+                setFile(null);
+
+                await updateEmployeeImage(employeeId, objectKey);
+
+            } else {
+                console.error('File upload failed:', uploadResponse.statusText);
+                throw new Error('File upload failed.');
+            }
+        } catch (err) {
+            console.error('Error during file upload:', err);
+            setError('Error during file upload.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const updateEmployeeImage = async (employeeId: number, objectKey: string) => {
+        try {
+            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ photo: `https://techticket-images.s3.eu-west-2.amazonaws.com/${objectKey}` }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update employee image');
+            }
+
+            console.log('Employee image updated successfully');
+        } catch (err) {
+            console.error('Error updating employee image:', err);
+        }
+    };
+
+    return (
+        <div>
+            <Label htmlFor="picture">Upload Employee Image</Label>
+            <Input type="file" id="picture" onChange={handleFileChange} />
+            {uploading && <p>Uploading...</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {success && <p style={{ color: 'green' }}>File uploaded successfully!</p>}
+            <Button variant="outline" size="sm" className="ml-auto" onClick={handleUpload} disabled={uploading}>Upload</Button>
+        </div>
+    );
+};
+
+
+
 
 

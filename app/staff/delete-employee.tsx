@@ -28,7 +28,7 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
         event.preventDefault();
 
         try {
-            const response = await fetch(`http://localhost:8080/api/employees/${employeeId}`, {
+            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
