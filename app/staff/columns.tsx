@@ -20,6 +20,7 @@ export type Employee = {
     position: string
     phone: string
     email: string
+    photo: string
 }
 
 

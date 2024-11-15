@@ -170,7 +170,7 @@ export default function ViewEmployee({ employeeId }: ViewEmployeeProps) {
                                 <Button variant="outline" className="ml-auto" size="sm" onClick={onEditClick}>Edit</Button>
                             )}
                         </div>
-                        {editing ? <ImageUpload employeeId={employeeId} /> : <img src="https://i.ibb.co/7tJ5hgZ/80ce3e50-e657-4be4-a300-46768b8eaa92.webp" />
+                        {editing ? <ImageUpload employeeId={employeeId} setEmployeeData={setEmployeeData} /> : <img src={employeeData.photo} />
                         }
                         <span className="col-span-3 w-full"><TicketsPage employeeId={employeeId} /></span>
                     </div>
@@ -195,9 +195,10 @@ type UploadResponse = {
 
 type ImageUploadProps = {
     employeeId: number;
+    setEmployeeData: React.Dispatch<React.SetStateAction<Employee | null>>;
 };
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId, setEmployeeData }) => {
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -224,7 +225,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
             const apiUrl = 'https://majhdtduxl.execute-api.eu-west-2.amazonaws.com/getUploadUrl';
             console.log(`Requesting pre-signed URL from: ${apiUrl}?filename=${file.name}`);
 
-            
             const response = await fetch(`${apiUrl}?filename=${file.name}&contentType=${file.type}`, { method: 'GET' });
 
             if (!response.ok) {
@@ -236,17 +236,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
             console.log('Received pre-signed URL:', data);
             const { uploadURL, objectKey } = data;
 
-           
             console.log(`Uploading file to S3 with object key: ${objectKey}`);
 
-            
             const fileType = file.type || 'application/octet-stream';
             console.log('Selected file type:', fileType);
-           
+
             const uploadResponse = await fetch(uploadURL, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': fileType,  
+                    'Content-Type': fileType,
                 },
                 body: file,
             });
@@ -255,7 +253,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
                 setSuccess(true);
                 setFile(null);
 
+                // Update employee image with new URL
                 await updateEmployeeImage(employeeId, objectKey);
+
+                // Optionally, you can directly update employee data in the UI without re-fetching
+                setEmployeeData((prev) => prev ? { ...prev, photo: `https://techticket-images.s3.amazonaws.com/${objectKey}` } : null);
 
             } else {
                 console.error('File upload failed:', uploadResponse.statusText);
@@ -271,12 +273,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId }) => {
 
     const updateEmployeeImage = async (employeeId: number, objectKey: string) => {
         try {
+            const photoUrl = `https://techticket-images.s3.amazonaws.com/${objectKey}`;
+            const payload = { photo: photoUrl };
+            console.log('Payload being sent:', payload);
+            console.log('Serialized payload:', JSON.stringify(payload));
+
             const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ photo: `https://techticket-images.s3.eu-west-2.amazonaws.com/${objectKey}` }),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
