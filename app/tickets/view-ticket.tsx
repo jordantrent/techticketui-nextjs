@@ -40,13 +40,12 @@ export default function ViewTicket({ rowSelect }: ViewTicketProps) {
                 <div className="flex py-4">
                     <div className="grid grid-cols-4 flex-row gap-4">
                         <div className= "grid grid-rows-2 gap-4 col-span-2">
-                            {/* <CustomerDetails rowSelect={rowSelect} className="" /> */}
-                            <TicketDetails rowSelect={rowSelect} className=""/>
+                            <TicketDetails rowSelect={rowSelect} className="" />
                         </div>
                         <div className="col-span-2">
                             <TicketImages rowSelect={rowSelect} />
+                            <CustomerDetails rowSelect={rowSelect} className="" />
                         </div>
-                        {/* <CustomerDetails rowSelect={rowSelect} className="col-span-4" /> */}
                     </div>
                 </div>
                 <DialogFooter>

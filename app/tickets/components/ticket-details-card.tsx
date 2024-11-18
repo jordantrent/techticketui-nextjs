@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AssignEmployees } from "./assign-employees";
+import { Pencil } from "lucide-react";
 
 interface TicketsDetailsProps {
     rowSelect: number;
@@ -121,7 +122,21 @@ export function TicketDetails({ className, rowSelect }: TicketsDetailsProps) {
             {error && <p className="text-red-600">{error}</p>}
             {ticketData && (
                 <div className="grid gap-4 items-start">
-                    <div className="flex flex-col items-end gap-4">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between w-full">
+                            <span className="text-lg font-semibold leading-none tracking-tight text-left">
+                                Ticket Details
+                            </span>
+                            {editing ? (
+                                <Button variant="outline" size="sm" type="submit" onClick={handleSave}>
+                                    Save changes
+                                </Button>
+                            ) : (
+                                <Button variant="outline" size="sm" onClick={onEditClick}>
+                                    Edit
+                                </Button>
+                            )}
+                        </div>
                         <Card className="grid grid-cols-3 items-center p-4">
                             <Label className="col-span-2 text-left mb-4">Issue Description</Label>
                             <Textarea
@@ -142,9 +157,9 @@ export function TicketDetails({ className, rowSelect }: TicketsDetailsProps) {
                             {!editing ? (
                                 <Textarea
                                     disabled={!editing}
-                                    className="col-span-2 w-full resize-none"
+                                    className="col-span-2 resize-none"
                                     value={ticketData.employees?.map(emp => `${emp.firstName} ${emp.lastName}`).join('\n') || ''}
-                                    rows={ticketData.employees?.length || 1}
+                                    rows={ticketData.employees?.length || 0}
                                 />
                             ) : (
                                 <AssignEmployees className="col-span-2" rowSelect={rowSelect} />
@@ -165,11 +180,6 @@ export function TicketDetails({ className, rowSelect }: TicketsDetailsProps) {
                                 </Select>
                             </span>
                         </Card>
-                        {editing ? (
-                            <Button variant="outline" size="sm" className="ml-auto" type="submit" onClick={handleSave}>Save changes</Button>
-                        ) : (
-                            <Button variant="outline" className="ml-auto" size="sm" onClick={onEditClick}>Edit</Button>
-                        )}
                     </div>
                 </div>
             )}
