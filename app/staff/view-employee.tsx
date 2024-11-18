@@ -253,10 +253,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId, setEmployeeData }
                 setSuccess(true);
                 setFile(null);
 
-                // Update employee image with new URL
+                
                 await updateEmployeeImage(employeeId, objectKey);
 
-                // Optionally, you can directly update employee data in the UI without re-fetching
+                
                 setEmployeeData((prev) => prev ? { ...prev, photo: `https://techticket-images.s3.amazonaws.com/${objectKey}` } : null);
 
             } else {

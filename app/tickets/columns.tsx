@@ -1,16 +1,5 @@
 "use client"
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import ViewTicket from "./view-ticket"
 
 export interface Employee {
@@ -37,6 +26,11 @@ export const columns: ColumnDef<Ticket>[] = [
     {
         accessorKey: "issueDescription",
         header: "Description",
+        cell: ({ getValue }) => {
+            const text = getValue() as string;
+            const maxLength =100;
+            return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+        },
     },
     {
         accessorKey: "createdDate",
