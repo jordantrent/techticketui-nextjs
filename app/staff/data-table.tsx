@@ -114,7 +114,6 @@ export function DataTable<TData, TValue>({
            
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <AddEmployee refetchData={refetchData} setOpen={setIsOpen} />
-                
             </Dialog>
         </div>
     );

@@ -136,10 +136,10 @@ export function CustomerDetails({ className, rowSelect }: CustomerDetailsProps) 
                             )}
                         </div>
                         <Card className="grid grid-cols-3 items-center p-4">
-                            <Label className="col-span-1 text-left mb-4">Contact Name</Label>
+                            <Label className="col-span-1 text-left">Contact Name</Label>
                             <Input
                                 disabled={!editing}
-                                className="col-span-2 w-full  resize-none"
+                                className="col-span-2 w-full resize-none"
                                 value={customerData.name}
                                 onChange={(e) => handleInputChange("name", e.target.value)}
                             />
@@ -151,14 +151,14 @@ export function CustomerDetails({ className, rowSelect }: CustomerDetailsProps) 
                                 onChange={(e) => handleInputChange("address", e.target.value)}
                                 rows={3}
                             />
-                            <Label className="col-span-1 text-left mb-4">Email</Label>
+                            <Label className="col-span-1 text-left">Email</Label>
                             <Input
                                 disabled={!editing}
                                 className="col-span-2 w-full resize-none"
                                 value={customerData.email}
                                 onChange={(e) => handleInputChange("email", e.target.value)}
                             />
-                            <Label className="col-span-1 text-left mb-4">Phone</Label>
+                            <Label className="col-span-1 text-left">Phone</Label>
                             <Input
                                 disabled={!editing}
                                 className="col-span-2 w-full resize-none"
