@@ -17,7 +17,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import AddTicket from "./add-ticket"
+import AddTicket from "./components/add-ticket"
 import { Dialog } from "@/components/ui/dialog"
 
 interface DataTableProps<TData, TValue> {
