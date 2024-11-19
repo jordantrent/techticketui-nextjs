@@ -28,18 +28,46 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
         event.preventDefault();
 
         try {
-            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                throw new Error('Failed to delete the employee');
+            // Log the initiation of the delete process
+            console.log(`Initiating deletion process for Employee ID: ${employeeId}`);
+
+            // Step 1: Unassign Tickets
+            console.log(`Calling unassign-tickets API for Employee ID: ${employeeId}`);
+            const unassignResponse = await fetch(
+                `http://18.171.174.40:8080/api/employees/${employeeId}/unassign-tickets`,
+                { method: 'PUT' }
+            );
+
+            if (!unassignResponse.ok) {
+                const errorDetails = await unassignResponse.text();
+                console.error(`Unassign Tickets API Failed: ${errorDetails}`);
+                throw new Error(`Failed to unassign tickets: ${errorDetails}`);
             }
+            console.log('Tickets successfully unassigned.');
+
+            // Step 2: Delete Employee
+            console.log(`Calling delete API for Employee ID: ${employeeId}`);
+            const deleteResponse = await fetch(
+                `http://18.171.174.40:8080/api/employees/${employeeId}`,
+                { method: 'DELETE' }
+            );
+
+            if (!deleteResponse.ok) {
+                const errorDetails = await deleteResponse.text();
+                console.error(`Delete Employee API Failed: ${errorDetails}`);
+                throw new Error(`Failed to delete employee: ${errorDetails}`);
+            }
+
+            // Log success and notify parent component
             console.log(`Employee with ID ${employeeId} deleted successfully`);
-            onDeleteSuccess();  // Close the dialog after successful deletion
+            onDeleteSuccess();
         } catch (error) {
-            console.error('Error deleting employee:', error);
+            // Log and alert the error
+            console.error(`Error during employee deletion: ${error}`);
+            alert(`Error: ${error.message}`);
         }
     };
+
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

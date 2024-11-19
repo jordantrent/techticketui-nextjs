@@ -21,19 +21,26 @@ import {
 import { useState, useEffect } from 'react';
 import { Ticket } from "./columns";
 import { TicketDetails } from "./components/ticket-details-card";
+import { DeleteTicket } from "./components/delete-ticket";
 
 interface ViewTicketProps {
     rowSelect: number;
 }
 
 export default function ViewTicket({ rowSelect }: ViewTicketProps) {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleDialogClose = () => {
+        console.log("Dialog will be closed");
+        setIsDialogOpen(false);
+    }
     
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="outline" size="icon"><Maximize2 className="h-4 w-4"/></Button>
             </DialogTrigger>
-            <DialogContent className="max-w-[800px] max-h-[800px]">
+            <DialogContent className="max-w-[800px] max-h-[800px] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Ticket #{rowSelect}</DialogTitle>
                 </DialogHeader>
@@ -45,10 +52,20 @@ export default function ViewTicket({ rowSelect }: ViewTicketProps) {
                         <div className="col-span-2">
                             <TicketImages rowSelect={rowSelect} />
                             <CustomerDetails rowSelect={rowSelect} className="" />
+                            <div className="justify-self-end mt-4">
+                            <DeleteTicket
+                                rowSelect={rowSelect}
+                                isDialogOpen={isDialogOpen}
+                                setIsDialogOpen={setIsDialogOpen}
+                                    onDeleteSuccess={handleDialogClose}
+                                    
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
                 <DialogFooter>
+                    
                 </DialogFooter>
             </DialogContent>
         </Dialog>

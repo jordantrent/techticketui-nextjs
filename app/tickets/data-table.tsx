@@ -1,5 +1,5 @@
 "use client"
-
+import { useState } from 'react';
 import {
     ColumnDef,
     flexRender,
@@ -17,16 +17,19 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import ViewTicket from "./add-ticket"
+import AddTicket from "./add-ticket"
+import { Dialog } from "@/components/ui/dialog"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
+    refetchData: () => Promise<void>;
     data: TData[]
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    refetchData,
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -35,11 +38,13 @@ export function DataTable<TData, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
     })
 
+const [isOpen, setIsOpen] = useState(false);
+
     return (
         <div>
         <div className="flex justify-between items-center py-4">
                 <h1 className="text-lg font-semibold">Tickets</h1>
-                <ViewTicket/>
+                <Button variant="outline" onClick={() => setIsOpen(true)}>Add Ticket</Button>
             </div>
         <div className="rounded-md border">
                 <Table className="">
@@ -103,6 +108,9 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <AddTicket refetchData={refetchData} setOpen={setIsOpen} />
+            </Dialog>
         </div>
     )
 }
