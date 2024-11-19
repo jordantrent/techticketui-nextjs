@@ -4,10 +4,8 @@ import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { AssignEmployees } from "./assign-employees";
-import { StringToBoolean } from "class-variance-authority/types";
+
 
 interface CustomerDetailsProps {
     rowSelect: number;
@@ -15,6 +13,7 @@ interface CustomerDetailsProps {
 }
 
 interface Customer {
+    id: number;
     name: string;
     address: string;
     phone: string;
@@ -73,32 +72,43 @@ export function CustomerDetails({ className, rowSelect }: CustomerDetailsProps) 
     }
 
     const handleSave = async () => {
-        // if (!customerData) return;
+        if (!customerData) return;
 
-        //     const response = await fetch(`http://18.171.174.40:8080/api/tickets/customer/${rowSelect}`, {
-        //         method: 'PUT',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(sanitizedData),
-        //     });
+        try {
+            const sanitizedData = {
+                name: customerData.name,
+                address: customerData.address,
+                phone: customerData.phone,
+                email: customerData.email,
+            };
 
-        //     if (!response.ok) {
-        //         console.error('Response status:', response.status, 'Response text:', await response.text());
-        //         throw new Error('Failed to save changes');
-        //     }
+            const response = await fetch(
+                `http://18.171.174.40:8080/api/customers/${customerData.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(sanitizedData),
+                }
+            );
+
+            if (!response.ok) {
+                console.error("Response status:", response.status, "Response text:", await response.text());
+                throw new Error("Failed to save changes");
+            }
 
             setEditing(false);
             fetchCustomerData();
-        // } catch (err) {
-        //     if (err instanceof Error) {
-        //         console.error('Error message:', err.message);
-        //         setError(err.message);
-        //     } else {
-        //         console.error('Unknown error occurred');
-        //         setError('Unknown error occurred');
-        //     }
-        // }
+        } catch (err) {
+            if (err instanceof Error) {
+                console.error("Error message:", err.message);
+                setError(err.message);
+            } else {
+                console.error("Unknown error occurred");
+                setError("Unknown error occurred");
+            }
+        }
     };
 
      const addressLines = customerData?.address.split(", ") || [];
