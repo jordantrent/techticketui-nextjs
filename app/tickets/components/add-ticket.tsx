@@ -153,7 +153,7 @@ export default function AddTicket({ refetchData, setOpen }: AddEmployeeProps) {
 
             <DialogFooter>
                 <Button variant="outline" type="submit" onClick={handleSubmit}>
-                    Save changes
+                    Add Ticket
                 </Button>
             </DialogFooter>
         </DialogContent>
