@@ -45,7 +45,7 @@ export default function AddTicket({ refetchData, setOpen }: AddEmployeeProps) {
         try {
             const fullAddress = `${customerData.addressLine1}, ${customerData.addressLine2}, ${customerData.postcode}`;
 
-            const customerResponse = await fetch("http://18.171.174.40:8080/api/customers", {
+            const customerResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export default function AddTicket({ refetchData, setOpen }: AddEmployeeProps) {
 
             const customer = await customerResponse.json();
 
-            const ticketResponse = await fetch("http://18.171.174.40:8080/api/tickets", {
+            const ticketResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

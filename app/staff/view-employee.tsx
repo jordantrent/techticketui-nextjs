@@ -45,7 +45,7 @@ export default function ViewEmployee({ employeeId }: ViewEmployeeProps) {
                 setError(null);
 
                 try {
-                    const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/employees/${employeeId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function ViewEmployee({ employeeId }: ViewEmployeeProps) {
         if (!employeeData) return;
 
         try {
-            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -278,7 +278,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ employeeId, setEmployeeData }
             console.log('Payload being sent:', payload);
             console.log('Serialized payload:', JSON.stringify(payload));
 
-            const response = await fetch(`http://18.171.174.40:8080/api/employees/${employeeId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

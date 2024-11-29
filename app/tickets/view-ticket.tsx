@@ -80,7 +80,7 @@ function TicketImages({ rowSelect }: ViewTicketProps) {
     useEffect(() => {
         const fetchTicketImages = async () => {
             try {
-                const response = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch ticket data');
                 }
@@ -219,8 +219,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ rowSelect }) => {
             const photoUrl = `https://techticket-images.s3.amazonaws.com/${objectKey}`;
             console.log('New photo URL:', photoUrl);
 
-            // Fetch the current ticket details
-            const ticketResponse = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+            const ticketResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
                 method: 'GET',
             });
 
@@ -231,18 +230,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ rowSelect }) => {
             const ticketData = await ticketResponse.json();
             console.log('Current ticket data:', ticketData);
 
-            // Check and append the new photo URL to the existing photo field
             const updatedPhoto = ticketData.imagePath
-                ? `${ticketData.imagePath},${photoUrl}` // Append to the existing URLs
-                : photoUrl; // Use the new URL if no existing URLs
+                ? `${ticketData.imagePath},${photoUrl}` 
+                : photoUrl;
 
             console.log('Updated photo field:', updatedPhoto);
 
-            // Send the updated photo field back to the API
             const payload = { imagePath: updatedPhoto };
             console.log('Payload being sent:', payload);
 
-            const updateResponse = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+            const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

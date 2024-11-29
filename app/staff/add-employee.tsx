@@ -49,7 +49,7 @@ export function AddEmployee({ refetchData, setOpen }: AddEmployeeProps) {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://18.171.174.40:8080/api/employees", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
