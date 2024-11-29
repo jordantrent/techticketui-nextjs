@@ -27,7 +27,7 @@ export function DeleteTicket({ rowSelect, isDialogOpen, setIsDialogOpen, onDelet
         event.preventDefault();
 
         try {
-            const response = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {

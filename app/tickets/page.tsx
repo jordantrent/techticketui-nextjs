@@ -3,7 +3,7 @@ import { DataTable } from "./data-table"
 
 
 async function getData(): Promise<Ticket[]> {
-    const response = await fetch("http://18.171.174.40:8080/api/tickets", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets`, {
         method: "GET",
         headers: {
             "Cache-Control": "no-cache"

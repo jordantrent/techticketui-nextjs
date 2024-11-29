@@ -31,7 +31,7 @@ export function AssignEmployees({ className, rowSelect }: AssignEmployeesProps) 
 
     const fetchEmployees = async () => {
         setLoading(true);
-        const response = await fetch("http://18.171.174.40:8080/api/employees");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees`);
         const data = await response.json();
         const technicians = data.filter((emp: any) => emp.position === "Technician");
         setEmployees(technicians);
@@ -39,7 +39,7 @@ export function AssignEmployees({ className, rowSelect }: AssignEmployeesProps) 
     };
 
     const fetchAssignedEmployees = async () => {
-        const response = await fetch(`http://18.171.174.40:8080/api/employee/tickets/${rowSelect}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employee/tickets/${rowSelect}`);
         const data: { id: number }[] = await response.json();
         const assignedIds = new Set(data.map((emp: any) => emp.id));
         setAssignedEmployees(assignedIds);
@@ -70,7 +70,7 @@ export function AssignEmployees({ className, rowSelect }: AssignEmployeesProps) 
 
         console.log("Saving changes with payload:", JSON.stringify(payload, null, 2));
 
-        const response = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
             method: "PUT", 
             headers: {
                 "Content-Type": "application/json",

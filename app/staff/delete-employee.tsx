@@ -28,13 +28,11 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
         event.preventDefault();
 
         try {
-            // Log the initiation of the delete process
             console.log(`Initiating deletion process for Employee ID: ${employeeId}`);
 
-            // Step 1: Unassign Tickets
             console.log(`Calling unassign-tickets API for Employee ID: ${employeeId}`);
             const unassignResponse = await fetch(
-                `http://18.171.174.40:8080/api/employees/${employeeId}/unassign-tickets`,
+                `${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}/unassign-tickets`,
                 { method: 'PUT' }
             );
 
@@ -45,10 +43,10 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
             }
             console.log('Tickets successfully unassigned.');
 
-            // Step 2: Delete Employee
+        
             console.log(`Calling delete API for Employee ID: ${employeeId}`);
             const deleteResponse = await fetch(
-                `http://18.171.174.40:8080/api/employees/${employeeId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}`,
                 { method: 'DELETE' }
             );
 
@@ -58,11 +56,10 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
                 throw new Error(`Failed to delete employee: ${errorDetails}`);
             }
 
-            // Log success and notify parent component
             console.log(`Employee with ID ${employeeId} deleted successfully`);
             onDeleteSuccess();
         } catch (error) {
-            // Log and alert the error
+    
             console.error(`Error during employee deletion: ${error}`);
             alert(`Error: ${error.message}`);
         }

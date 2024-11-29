@@ -11,7 +11,7 @@ export default function Page() {
     
 
     const fetchData = async (): Promise<Employee[]> => {
-        const response = await fetch('http://18.171.174.40:8080/api/employees', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ type ViewEmployeeProps = {
 };
 
 async function fetchData(employeeId): Promise<Ticket[]> {
-    const response = await fetch(`http://18.171.174.40:8080/api/tickets/employee/${employeeId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employee/${employeeId}`, {
         method: "GET",
         headers: {
             "Cache-Control": "no-cache"

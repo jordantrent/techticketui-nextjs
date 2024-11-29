@@ -32,7 +32,7 @@ export function CustomerDetails({ className, rowSelect }: CustomerDetailsProps) 
         setError(null);
 
         try {
-            const response = await fetch(`http://18.171.174.40:8080/api/tickets/customer/${rowSelect}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/customer/${rowSelect}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export function CustomerDetails({ className, rowSelect }: CustomerDetailsProps) 
             };
 
             const response = await fetch(
-                `http://18.171.174.40:8080/api/customers/${customerData.id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/customers/${customerData.id}`,
                 {
                     method: "PUT",
                     headers: {

@@ -39,7 +39,7 @@ export function TicketDetails({ className, rowSelect }: TicketsDetailsProps) {
         setError(null);
 
         try {
-            const response = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export function TicketDetails({ className, rowSelect }: TicketsDetailsProps) {
 
             console.log('Sanitized Payload:', JSON.stringify(sanitizedData));
 
-            const response = await fetch(`http://18.171.174.40:8080/api/tickets/${rowSelect}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tickets/${rowSelect}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
