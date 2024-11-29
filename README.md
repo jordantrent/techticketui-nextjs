@@ -46,7 +46,7 @@ The frontend is built with **Next.js**, styled with **ShadCN**. It connects to t
 
 3. Create an .env.local for environment variables:
    ```bash
-   API_URL=http://localhost:8080/api
+   NEXT_PUBLIC_API_URL=http://localhost:8080/api
 
 4. Start the development server:
    ```bash
