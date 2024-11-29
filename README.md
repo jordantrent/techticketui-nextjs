@@ -31,7 +31,7 @@ The frontend is built with **Next.js**, styled with **ShadCN**. It connects to t
 ### Prerequisites
 
 - Node.js 18+
-- Access to the TechTicket backend API (See [TechTicket Backend](https://github.com/jtrent90/techticketui-nextjs))
+- Access to the TechTicket backend API (See [TechTicket Backend](https://github.com/jordantrent/techticket-api))
 
 ### Steps
 
