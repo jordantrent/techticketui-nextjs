@@ -45,7 +45,7 @@ export default function ViewEmployee({ employeeId }: ViewEmployeeProps) {
                 setError(null);
 
                 try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/employees/${employeeId}`, {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
