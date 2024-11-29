@@ -37,7 +37,7 @@ The frontend is built with **Next.js**, styled with **ShadCN**. It connects to t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/jtrent/techticketui-nextjs.git
+   git clone https://github.com/jordantrent/techticketui-nextjs.git
    cd techticketui-nextjs
 
 2. Install dependencies:
