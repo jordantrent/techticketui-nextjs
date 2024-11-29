@@ -23,7 +23,7 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
 
     const deleteEmployee = async (
         event: React.MouseEvent<HTMLButtonElement>,
-        employeeId: number,
+        employeeId: number
     ) => {
         event.preventDefault();
 
@@ -36,14 +36,19 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
                 { method: 'PUT' }
             );
 
-            if (!unassignResponse.ok) {
+          
+            if (!unassignResponse.ok && unassignResponse.status !== 404) {
                 const errorDetails = await unassignResponse.text();
                 console.error(`Unassign Tickets API Failed: ${errorDetails}`);
                 throw new Error(`Failed to unassign tickets: ${errorDetails}`);
             }
-            console.log('Tickets successfully unassigned.');
 
-        
+            console.log(
+                unassignResponse.status === 404
+                    ? `No tickets found to unassign for Employee ID: ${employeeId}.`
+                    : 'Tickets successfully unassigned.'
+            );
+
             console.log(`Calling delete API for Employee ID: ${employeeId}`);
             const deleteResponse = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/employees/${employeeId}`,
@@ -58,8 +63,7 @@ export function DeleteEmployee({ employeeId, isDialogOpen, setIsDialogOpen, onDe
 
             console.log(`Employee with ID ${employeeId} deleted successfully`);
             onDeleteSuccess();
-        } catch (error) {
-    
+        } catch (error: any) {
             console.error(`Error during employee deletion: ${error}`);
             alert(`Error: ${error.message}`);
         }
